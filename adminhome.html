@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex"/>
+<title>Admin Dashboard – SR Job Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0806; --bg2: #120f09; --bg3: #1a1610;
+    --ink: #f0e8d5; --ink2: #8a7a60; --ink3: #5a4a30;
+    --gold: #c8973a; --gold2: #e8b84b;
+    --card: #1e1a12; --border: #2a2218;
+    --success: #27ae60; --error: #e74c3c; --warn: #f39c12;
+    --radius: 14px; --transition: 0.3s cubic-bezier(0.23,1,0.32,1);
+  }
+  [data-theme="light"] {
+    --bg: #f5f0e8; --bg2: #ebe4d6; --bg3: #fff9f0;
+    --ink: #1a1208; --ink2: #5a4e38; --ink3: #9a8a70;
+    --card: #fff9f0; --border: #d4c8b0;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  .sidebar {
+    background: var(--bg2); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 24px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-badge {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: #fff;
+  }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; }
+  .logo-text span { color: var(--gold); }
+  .nav-section { padding: 20px 12px 8px; }
+  .nav-label { font-size: 0.68rem; font-weight: 600; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px; margin-bottom: 6px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    font-size: 0.875rem; color: var(--ink2); cursor: pointer;
+    transition: all var(--transition); margin-bottom: 2px;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: rgba(200,151,58,0.1); color: var(--gold);
+  }
+  .nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .sidebar-footer { margin-top: auto; padding: 16px 12px; border-top: 1px solid var(--border); }
+  .admin-badge {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; background: rgba(200,151,58,0.08);
+  }
+  .admin-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .admin-name { font-size: 0.82rem; font-weight: 500; }
+  .admin-role { font-size: 0.7rem; color: var(--gold); }
+  .btn-logout {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 12px; border-radius: 10px;
+    font-size: 0.82rem; color: var(--error); cursor: pointer;
+    transition: all var(--transition); margin-top: 6px;
+    border: none; background: none; width: 100%;
+  }
+  .btn-logout:hover { background: rgba(231,76,60,0.1); }
+
+  /* ── Main content ── */
+  .main { flex: 1; overflow: hidden; }
+  .topbar {
+    padding: 18px 32px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .btn-icon-sm {
+    width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border);
+    background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; color: var(--ink2); transition: all var(--transition);
+  }
+  .btn-icon-sm:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border: none; border-radius: 10px; padding: 9px 18px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    color: #fff; cursor: pointer; transition: all var(--transition);
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .content { padding: 32px; overflow-y: auto; }
+
+  /* ── Stats ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; position: relative; overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+  }
+  .stat-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(200,151,58,0.12); display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; margin-bottom: 16px;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem;
+    color: var(--gold); letter-spacing: -0.02em;
+  }
+  .stat-label { font-size: 0.82rem; color: var(--ink2); margin-top: 4px; }
+
+  /* ── Section headers ── */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(200,151,58,0.15); color: var(--gold);
+    border-radius: 100px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600;
+  }
+
+  /* ── Tables ── */
+  .table-wrap {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; margin-bottom: 32px;
+  }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  thead tr { background: rgba(200,151,58,0.06); }
+  th {
+    padding: 12px 16px; text-align: left;
+    font-size: 0.72rem; font-weight: 600; color: var(--ink2);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  td {
+    padding: 12px 16px; font-size: 0.85rem; color: var(--ink);
+    border-bottom: 1px solid var(--border); vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(200,151,58,0.04); }
+  .empty-row td { text-align: center; color: var(--ink2); padding: 32px; font-size: 0.875rem; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 10px 18px; border: none; background: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--ink2);
+    border-bottom: 2px solid transparent; transition: all var(--transition);
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 500; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px); z-index: 500;
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 24px; overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 20px;
+    width: 100%; max-width: 600px; margin: auto;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    animation: modalIn 0.35s cubic-bezier(0.23,1,0.32,1) both;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-header {
+    padding: 24px 28px 0; display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+  .modal-close {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+    background: none; cursor: pointer; font-size: 1.1rem; color: var(--ink2);
+    display: flex; align-items: center; justify-content: center; transition: all var(--transition);
+  }
+  .modal-close:hover { border-color: var(--error); color: var(--error); }
+  .modal-body { padding: 24px 28px; }
+  .modal-footer { padding: 0 28px 24px; display: flex; gap: 12px; justify-content: flex-end; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid .full { grid-column: 1/-1; }
+  .form-group { margin-bottom: 0; }
+  label { display: block; font-size: 0.77rem; font-weight: 500; color: var(--ink2); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.05em; }
+  input, select, textarea {
+    width: 100%; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--ink);
+    transition: border-color var(--transition), box-shadow var(--transition); outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,151,58,0.1);
+  }
+  input::placeholder, textarea::placeholder { color: var(--ink3); }
+  select option { background: var(--bg2); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+  .checkbox-item { display: flex; align-items: center; gap: 6px; }
+  .checkbox-item input[type="checkbox"] {
+    width: auto; padding: 0; accent-color: var(--gold);
+  }
+  .checkbox-item label { font-size: 0.875rem; color: var(--ink); text-transform: none; letter-spacing: 0; margin-bottom: 0; }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border: none; border-radius: 10px; padding: 11px 24px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: #fff;
+    cursor: pointer; transition: all var(--transition); display: flex; align-items: center; gap: 8px;
+  }
+  .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-cancel {
+    background: none; border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--ink2);
+    cursor: pointer; transition: all var(--transition);
+  }
+  .btn-cancel:hover { border-color: var(--ink2); color: var(--ink); }
+  .spinner {
+    width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .form-alert { border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; display: none; }
+  .form-alert.show { display: block; }
+  .form-alert.success { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.25); color: #27ae60; }
+  .form-alert.error { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.25); color: #e74c3c; }
+
+  /* ── Loading ── */
+  .loading-state {
+    text-align: center; padding: 48px; color: var(--ink2); font-size: 0.875rem;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .big-spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border);
+    border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .content { padding: 20px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+  }
+  @media (max-width: 500px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+
+  /* tab panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+       <div style="display:flex; align-items:center; gap:10px;">
+
+                <img src="srlogo.png" alt="SR Job Center Logo"
+                    style="width:50px; height:50px; object-fit:cover; border-radius:50%;">
+
+                <span style="font-size:24px; font-weight:bold; color:#000;">
+                    SR <span style="color:#007bff;">Job Center</span>
+                </span>
+
+            </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Dashboard</div>
+      <button class="nav-item active" onclick="showTab('overview')"><span class="nav-icon">📊</span> Overview</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Data</div>
+      <button class="nav-item" onclick="showTab('registers')"><span class="nav-icon">👤</span> Applicants</button>
+      <button class="nav-item" onclick="showTab('visitors')"><span class="nav-icon">👥</span> Visitors</button>
+      <button class="nav-item" onclick="showTab('jobrequests')"><span class="nav-icon">🏢</span> Job Requests</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Actions</div>
+      <button class="nav-item" onclick="openModal('register')"><span class="nav-icon">➕</span> Add Applicant</button>
+      <button class="nav-item" onclick="openModal('visitor')"><span class="nav-icon">➕</span> Add Visitor</button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="admin-badge">
+        <div class="admin-avatar" id="adminInitial">A</div>
+        <div>
+          <div class="admin-name" id="adminNameDisplay">Admin</div>
+          <div class="admin-role">Administrator</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="pageTitle">Overview</div>
+      <div class="topbar-right">
+        <button class="btn-icon-sm" id="themeToggle" title="Toggle theme">🌙</button>
+        <button class="btn-primary" onclick="refreshAll()">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Overview panel -->
+      <div class="tab-panel active" id="panel-overview">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💼</div>
+            <div class="stat-num" id="statJobs">–</div>
+            <div class="stat-label">Active Job Listings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👤</div>
+            <div class="stat-num" id="statReg">–</div>
+            <div class="stat-label">Total Applicants</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-num" id="statVis">–</div>
+            <div class="stat-label">Total Visitors</div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:32px;">
+          <button class="btn-primary" onclick="openModal('register')">➕ Register Applicant</button>
+          <button class="btn-primary" style="background:linear-gradient(135deg,#3a7bd5,#5a9df5)" onclick="openModal('visitor')">👥 Register Visitor</button>
+        </div>
+
+        <!-- Mini tables overview -->
+        <div class="section-header">
+          <div class="section-title">📋 Recent Applicants <span class="badge" id="regBadge">–</span></div>
+          <button class="tab" onclick="showTab('registers')" style="font-size:0.8rem; padding:6px 12px">View All →</button>
+        </div>
+        <div class="table-wrap" style="margin-bottom:32px">
+          <div class="table-scroll">
+            <table id="miniRegTable">
+              <thead><tr><th>Name</th><th>Position</th><th>Phone</th><th>Date</th></tr></thead>
+              <tbody><tr class="empty-row"><td colspan="4"><div class="loading-state"><div class="big-spinner"></div>Loading…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="section-title">🏢 Recent Job Requests <span class="badge" id="reqBadge">–</span></div>
+          <button class="tab" onclick="showTab('jobrequests')" style="font-size:0.8rem; padding:6px 12px">View All →</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table id="miniReqTable">
+              <thead><tr><th>Company</th><th>Position</th><th>Category</th><th>Date</th></tr></thead>
+              <tbody><tr class="empty-row"><td colspan="4"><div class="loading-state"><div class="big-spinner"></div>Loading…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registers panel -->
+      <div class="tab-panel" id="panel-registers">
+        <div class="section-header">
+          <div class="section-title">👤 All Applicants <span class="badge" id="regBadge2">–</span></div>
+          <button class="btn-primary" onclick="openModal('register')">➕ Add Applicant</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table id="regTable">
+              <thead><tr>
+                <th>#</th><th>Full Name</th><th>Gender</th><th>Position</th><th>Phone</th>
+                <th>Email</th><th>Address</th><th>Qualification</th><th>Experience</th>
+                <th>Language</th><th>Job Location</th><th>Citizenship No</th>
+                <th>Deposit</th><th>TXN ID</th><th>Date & Time</th>
+              </tr></thead>
+              <tbody><tr class="empty-row"><td colspan="15"><div class="loading-state"><div class="big-spinner"></div>Loading applicants…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visitors panel -->
+      <div class="tab-panel" id="panel-visitors">
+        <div class="section-header">
+          <div class="section-title">👥 All Visitors <span class="badge" id="visBadge">–</span></div>
+          <button class="btn-primary" onclick="openModal('visitor')">➕ Add Visitor</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table id="visTable">
+              <thead><tr>
+                <th>#</th><th>Full Name</th><th>Gender</th><th>Position</th>
+                <th>Phone</th><th>Address</th><th>Reference</th><th>Date & Time</th>
+              </tr></thead>
+              <tbody><tr class="empty-row"><td colspan="8"><div class="loading-state"><div class="big-spinner"></div>Loading visitors…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Requests panel -->
+      <div class="tab-panel" id="panel-jobrequests">
+        <div class="section-header">
+          <div class="section-title">🏢 Staff Requests <span class="badge" id="reqBadge2">–</span></div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table id="reqTable">
+              <thead><tr>
+                <th>#</th><th>Company</th><th>Category</th><th>Address</th><th>Location</th>
+                <th>Staff Need</th><th>Position</th><th>Working Hrs</th><th>Qualification</th>
+                <th>Shift</th><th>Salary Range</th><th>Gender</th><th>Description</th><th>Date</th>
+              </tr></thead>
+              <tbody><tr class="empty-row"><td colspan="14"><div class="loading-state"><div class="big-spinner"></div>Loading requests…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Register Modal ══ -->
+<div class="modal-overlay" id="modalRegister">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ Register Job Applicant</div>
+      <button class="modal-close" onclick="closeModal('register')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="r_fullname" placeholder="Full Name" required/></div>
+        <div class="form-group"><label>Gender *</label>
+          <select id="r_gender">
+            <option value="">Select Gender</option>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Position *</label><input type="text" id="r_position" placeholder="Desired Position"/></div>
+        <div class="form-group"><label>Phone *</label><input type="tel" id="r_phone" placeholder="+977 9768000000"/></div>
+        <div class="form-group"><label>Email</label><input type="email" id="r_email" placeholder="example@gmail.com"/></div>
+        <div class="form-group"><label>Address *</label><input type="text" id="r_address" placeholder="City, District"/></div>
+        <div class="form-group"><label>Qualification *</label>
+          <select id="r_qualification">
+            <option value="">Select</option>
+            <option>no educated</option><option>8 pass</option><option>10 pass</option>
+            <option>+2 pass</option><option>bachelor</option><option>master</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Experience *</label>
+          <select id="r_experience">
+            <option value="">Select</option>
+            <option>fresher</option><option>1 years</option><option>2 years</option>
+            <option>3 years</option><option>more than 3</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Language (select all that apply)</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item"><input type="checkbox" id="lang_np" value="Nepali"/><label for="lang_np">Nepali</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="lang_en" value="English"/><label for="lang_en">English</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="lang_hi" value="Hindi"/><label for="lang_hi">Hindi</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="lang_ot" value="Other"/><label for="lang_ot">Other</label></div>
+          </div>
+        </div>
+        <div class="form-group"><label>Job Location</label><input type="text" id="r_joblocation" placeholder="Preferred location"/></div>
+        <div class="form-group"><label>Citizenship No.</label><input type="text" id="r_citizenship" placeholder="Citizenship Number"/></div>
+        <div class="form-group"><label>Deposit Amount</label><input type="number" id="r_deposit" placeholder="Amount (NPR)"/></div>
+        <div class="form-group"><label>Payment TXN ID</label><input type="text" id="r_txnid" placeholder="Transaction ID"/></div>
+      </div>
+      <div class="form-alert" id="regAlert"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('register')">Cancel</button>
+      <button class="btn-submit" id="regSubmitBtn" onclick="submitRegister()">
+        <span id="regBtnText">✅ Register</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Visitor Modal ══ -->
+<div class="modal-overlay" id="modalVisitor">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">👥 Register Visitor</div>
+      <button class="modal-close" onclick="closeModal('visitor')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="v_fullname" placeholder="Full Name"/></div>
+        <div class="form-group"><label>Gender *</label>
+          <select id="v_gender">
+            <option value="">Select Gender</option>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Position</label><input type="text" id="v_position" placeholder="Looking for position"/></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="v_phone" placeholder="+977 9768000000"/></div>
+        <div class="form-group full"><label>Address</label><input type="text" id="v_address" placeholder="City, District"/></div>
+        <div class="form-group full"><label>Reference</label><input type="text" id="v_reference" placeholder="How did they hear about us?"/></div>
+      </div>
+      <div class="form-alert" id="visAlert"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('visitor')">Cancel</button>
+      <button class="btn-submit" id="visSubmitBtn" onclick="submitVisitor()">
+        <span id="visBtnText">✅ Register Visitor</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = "https://script.google.com/macros/s/AKfycbxQ-QXTfypT2y1b5b2OTGNnMYYiOywbzsnZozDxN1LmfW4TyYcaTin-LsvUNKc4GodL/exec";
+
+  // Auth check
+  if (sessionStorage.getItem('adminAuth') !== 'true') { location.href = 'admin.html'; }
+  const adminName = sessionStorage.getItem('adminName') || 'Admin';
+  document.getElementById('adminNameDisplay').textContent = adminName;
+  document.getElementById('adminInitial').textContent = adminName.charAt(0).toUpperCase();
+
+  // Theme
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  if (savedTheme === 'light') { root.setAttribute('data-theme','light'); toggle.textContent = '🌙'; }
+  toggle.addEventListener('click', () => {
+    const isLight = root.getAttribute('data-theme') === 'light';
+    root.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    toggle.textContent = isLight ? '🌙' : '☀️';
+    localStorage.setItem('theme', isLight ? 'dark' : 'light');
+  });
+
+  function logout() {
+    sessionStorage.clear();
+    location.href = 'admin.html';
+  }
+
+  // Tab switching
+  const titles = { overview:'Overview', registers:'All Applicants', visitors:'All Visitors', jobrequests:'Staff Requests' };
+  function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    document.getElementById('pageTitle').textContent = titles[name] || name;
+    // Trigger load
+    if (name === 'registers') loadRegisters();
+    if (name === 'visitors') loadVisitors();
+    if (name === 'jobrequests') loadJobRequests();
+  }
+
+  // ─── API call helper ───
+  async function post(payload) {
+    const resp = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    return resp.json();
+  }
+
+  // ─── Load stats ───
+  async function loadStats() {
+    try {
+      const data = await post({ action: 'getStats' });
+      if (data.success && data.data) {
+        document.getElementById('statJobs').textContent = data.data.activeJobs;
+        document.getElementById('statReg').textContent  = data.data.totalReg;
+        document.getElementById('statVis').textContent  = data.data.totalVis;
+      }
+    } catch (e) { console.error(e); }
+  }
+
+  // ─── Load registers ───
+  async function loadRegisters() {
+    const tbody1 = document.querySelector('#miniRegTable tbody');
+    const tbody2 = document.querySelector('#regTable tbody');
+    setLoading(tbody1, 4); setLoading(tbody2, 15);
+    try {
+      const data = await post({ action: 'getRegisters' });
+      if (data.success && data.data) {
+        const rows = data.data;
+        document.getElementById('regBadge').textContent  = rows.length;
+        document.getElementById('regBadge2').textContent = rows.length;
+        // Mini table (last 5)
+        const recent = rows.slice(-5).reverse();
+        tbody1.innerHTML = recent.length ? recent.map(r =>
+          `<tr><td>${r.fullname||'–'}</td><td>${r.position||'–'}</td><td>${r.phone||'–'}</td><td>${r.dateandtime||'–'}</td></tr>`
+        ).join('') : `<tr class="empty-row"><td colspan="4">No applicants yet.</td></tr>`;
+        // Full table
+        tbody2.innerHTML = rows.length ? rows.map((r,i) =>
+          `<tr>
+            <td>${i+1}</td><td>${r.fullname||'–'}</td><td>${r.gender||'–'}</td>
+            <td>${r.position||'–'}</td><td>${r.phone||'–'}</td><td>${r.email||'–'}</td>
+            <td>${r.address||'–'}</td><td>${r.qualifaction||'–'}</td><td>${r.experience||'–'}</td>
+            <td>${r.language||'–'}</td><td>${r.joblocation||'–'}</td><td>${r.citizenship_no||'–'}</td>
+            <td>${r.deposit_amount||'–'}</td><td>${r.payment_txn_id||'–'}</td><td>${r.dateandtime||'–'}</td>
+          </tr>`
+        ).join('') : `<tr class="empty-row"><td colspan="15">No applicants registered.</td></tr>`;
+      }
+    } catch(e) {
+      tbody2.innerHTML = `<tr class="empty-row"><td colspan="15">Error loading data.</td></tr>`;
+    }
+  }
+
+  // ─── Load visitors ───
+  async function loadVisitors() {
+    const tbody = document.querySelector('#visTable tbody');
+    setLoading(tbody, 8);
+    try {
+      const data = await post({ action: 'getVisitors' });
+      if (data.success && data.data) {
+        const rows = data.data;
+        document.getElementById('visBadge').textContent = rows.length;
+        tbody.innerHTML = rows.length ? rows.map((r,i) =>
+          `<tr>
+            <td>${i+1}</td><td>${r.fullname||'–'}</td><td>${r.gender||'–'}</td>
+            <td>${r.position||'–'}</td><td>${r.phone||'–'}</td>
+            <td>${r.address||'–'}</td><td>${r.reference||'–'}</td><td>${r.dateandtime||'–'}</td>
+          </tr>`
+        ).join('') : `<tr class="empty-row"><td colspan="8">No visitors registered.</td></tr>`;
+      }
+    } catch(e) { tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Error loading data.</td></tr>`; }
+  }
+
+  // ─── Load job requests ───
+  async function loadJobRequests() {
+    const tbody1 = document.querySelector('#miniReqTable tbody');
+    const tbody2 = document.querySelector('#reqTable tbody');
+    setLoading(tbody1, 4); setLoading(tbody2, 14);
+    try {
+      const data = await post({ action: 'getJobRequests' });
+      if (data.success && data.data) {
+        const rows = data.data;
+        document.getElementById('reqBadge').textContent  = rows.length;
+        document.getElementById('reqBadge2').textContent = rows.length;
+        const recent = rows.slice(-5).reverse();
+        tbody1.innerHTML = recent.length ? recent.map(r =>
+          `<tr><td>${r.company_name||'–'}</td><td>${r.position||'–'}</td><td>${r.category||'–'}</td><td>${r.timestamp||'–'}</td></tr>`
+        ).join('') : `<tr class="empty-row"><td colspan="4">No requests yet.</td></tr>`;
+        tbody2.innerHTML = rows.length ? rows.map((r,i) =>
+          `<tr>
+            <td>${i+1}</td><td>${r.company_name||'–'}</td><td>${r.category||'–'}</td>
+            <td>${r.address||'–'}</td>
+            <td><a href="${r.location_link}" target="_blank" style="color:var(--gold)">Map</a></td>
+            <td>${r.staff_need||'–'}</td><td>${r.position||'–'}</td><td>${r.working_hrs||'–'}</td>
+            <td>${r.qualifaction_need||'–'}</td><td>${r.shift||'–'}</td>
+            <td>${r.salary_range||'–'}</td><td>${r.gender||'–'}</td>
+            <td>${r.job_discription||'–'}</td><td>${r.timestamp||'–'}</td>
+          </tr>`
+        ).join('') : `<tr class="empty-row"><td colspan="14">No staff requests.</td></tr>`;
+      }
+    } catch(e) { tbody2.innerHTML = `<tr class="empty-row"><td colspan="14">Error loading data.</td></tr>`; }
+  }
+
+  function setLoading(tbody, cols) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="${cols}"><div class="loading-state"><div class="big-spinner"></div>Loading…</div></td></tr>`;
+  }
+
+  function refreshAll() {
+    loadStats();
+    loadRegisters();
+    loadJobRequests();
+  }
+
+  // ─── Modals ───
+  function openModal(type) {
+    document.getElementById('modal' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(type) {
+    document.getElementById('modal' + type.charAt(0).toUpperCase() + type.slice(1)).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  window.addEventListener('click', e => {
+    if (e.target.classList.contains('modal-overlay')) {
+      e.target.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ─── Submit Register ───
+  async function submitRegister() {
+    const langs = ['lang_np','lang_en','lang_hi','lang_ot']
+      .filter(id => document.getElementById(id).checked)
+      .map(id => document.getElementById(id).value).join(', ');
+
+    const data = {
+      fullname: document.getElementById('r_fullname').value.trim(),
+      gender: document.getElementById('r_gender').value,
+      position: document.getElementById('r_position').value.trim(),
+      phone: document.getElementById('r_phone').value.trim(),
+      email: document.getElementById('r_email').value.trim(),
+      address: document.getElementById('r_address').value.trim(),
+      qualifaction: document.getElementById('r_qualification').value,
+      experience: document.getElementById('r_experience').value,
+      language: langs,
+      joblocation: document.getElementById('r_joblocation').value.trim(),
+      citizenship_no: document.getElementById('r_citizenship').value.trim(),
+      deposit_amount: document.getElementById('r_deposit').value,
+      payment_txn_id: document.getElementById('r_txnid').value.trim(),
+      dateandtime: new Date().toLocaleString()
+    };
+    if (!data.fullname || !data.gender || !data.phone) {
+      showAlert('regAlert', 'error', '⚠️ Please fill in required fields (Name, Gender, Phone).');
+      return;
+    }
+    setSubmitting('regSubmitBtn', 'regBtnText', true);
+    try {
+      const resp = await post({ action: 'addRegister', data });
+      if (resp.success) {
+        showAlert('regAlert', 'success', '✅ Applicant registered successfully!');
+        loadRegisters(); loadStats();
+        setTimeout(() => { closeModal('register'); clearRegForm(); }, 2000);
+      } else {
+        showAlert('regAlert', 'error', '❌ ' + (resp.message || 'Something went wrong.'));
+      }
+    } catch(e) {
+      showAlert('regAlert', 'error', '❌ Network error.');
+    } finally {
+      setSubmitting('regSubmitBtn', 'regBtnText', false, '✅ Register');
+    }
+  }
+
+  // ─── Submit Visitor ───
+  async function submitVisitor() {
+    const data = {
+      fullname: document.getElementById('v_fullname').value.trim(),
+      gender: document.getElementById('v_gender').value,
+      position: document.getElementById('v_position').value.trim(),
+      phone: document.getElementById('v_phone').value.trim(),
+      address: document.getElementById('v_address').value.trim(),
+      reference: document.getElementById('v_reference').value.trim(),
+      dateandtime: new Date().toLocaleString()
+    };
+    if (!data.fullname) {
+      showAlert('visAlert', 'error', '⚠️ Please enter a name.');
+      return;
+    }
+    setSubmitting('visSubmitBtn', 'visBtnText', true);
+    try {
+      const resp = await post({ action: 'addVisitor', data });
+      if (resp.success) {
+        showAlert('visAlert', 'success', '✅ Visitor registered!');
+        loadVisitors(); loadStats();
+        setTimeout(() => { closeModal('visitor'); clearVisForm(); }, 2000);
+      } else {
+        showAlert('visAlert', 'error', '❌ ' + (resp.message || 'Error.'));
+      }
+    } catch(e) {
+      showAlert('visAlert', 'error', '❌ Network error.');
+    } finally {
+      setSubmitting('visSubmitBtn', 'visBtnText', false, '✅ Register Visitor');
+    }
+  }
+
+  function setSubmitting(btnId, textId, loading, label) {
+    const btn = document.getElementById(btnId);
+    const txt = document.getElementById(textId);
+    btn.disabled = loading;
+    txt.innerHTML = loading ? '<span class="spinner"></span> Saving…' : (label || 'Submit');
+  }
+
+  function showAlert(id, type, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = 'form-alert show ' + type;
+    setTimeout(() => el.className = 'form-alert', 5000);
+  }
+
+  function clearRegForm() {
+    ['r_fullname','r_position','r_phone','r_email','r_address','r_joblocation','r_citizenship','r_deposit','r_txnid'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('r_gender').selectedIndex = 0;
+    document.getElementById('r_qualification').selectedIndex = 0;
+    document.getElementById('r_experience').selectedIndex = 0;
+    ['lang_np','lang_en','lang_hi','lang_ot'].forEach(id => { document.getElementById(id).checked = false; });
+  }
+
+  function clearVisForm() {
+    ['v_fullname','v_position','v_phone','v_address','v_reference'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('v_gender').selectedIndex = 0;
+  }
+
+  // ─── Init ───
+  refreshAll();
+</script>
+</body>
+</html>

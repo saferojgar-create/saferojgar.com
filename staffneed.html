@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Hire qualified staff in Nepal – Submit your staff requirement to SR Job Center."/>
+<title>Hire Staff – SR Job Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:#f5f0e8; --bg2:#ebe4d6; --bg3:#fff9f0;
+    --ink:#1a1208; --ink2:#5a4e38; --ink3:#9a8a70;
+    --gold:#c8973a; --gold2:#e8b84b;
+    --card:#fff9f0; --border:#d4c8b0;
+    --success:#27ae60; --error:#e74c3c;
+    --radius:16px; --transition:0.35s cubic-bezier(0.23,1,0.32,1);
+  }
+  [data-theme="dark"] {
+    --bg:#0f0d09; --bg2:#1a1610; --bg3:#1e1a12;
+    --ink:#f0e8d5; --ink2:#8a7a60; --ink3:#5a4a30;
+    --card:#1e1a12; --border:#2a2218;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+  /* ── Header ── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px; border-bottom: 1px solid var(--border);
+    background: var(--bg); position: sticky; top: 0; z-index: 100;
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-badge {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: #fff;
+  }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--ink); }
+  .logo-text span { color: var(--gold); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .btn-sm {
+    padding: 8px 16px; border-radius: 100px; font-size: 0.82rem; font-weight: 500;
+    border: 1.5px solid var(--border); background: none; color: var(--ink);
+    cursor: pointer; transition: all var(--transition); text-decoration: none; display: inline-block;
+  }
+  .btn-sm:hover { border-color: var(--gold); color: var(--gold); }
+  .theme-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border);
+    background: none; cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center; transition: all var(--transition);
+  }
+  .theme-btn:hover { border-color: var(--gold); }
+
+  /* ── Hero ── */
+  .page-hero {
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 56px 40px; text-align: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,151,58,0.12); border: 1px solid rgba(200,151,58,0.3);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 0.75rem; font-weight: 600; color: var(--gold);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing: -0.02em; margin-bottom: 12px;
+  }
+  h1 em { font-style: normal; color: var(--gold); }
+  .hero-sub { font-size: 0.95rem; color: var(--ink2); max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+  /* ── Form container ── */
+  .form-container {
+    max-width: 800px; margin: 48px auto; padding: 0 24px 60px;
+  }
+  .form-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+    padding: 44px 48px; position: relative; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(26,18,8,0.08);
+  }
+  .form-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+  }
+  .form-section-title {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 24px; margin-top: 32px;
+  }
+  .form-section-title:first-of-type { margin-top: 0; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-grid .full { grid-column: 1/-1; }
+  .form-group { display: flex; flex-direction: column; }
+  label {
+    font-size: 0.77rem; font-weight: 600; color: var(--ink2);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+  }
+  .required::after { content: ' *'; color: var(--error); }
+  input, select, textarea {
+    width: 100%; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--ink);
+    transition: border-color var(--transition), box-shadow var(--transition); outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,151,58,0.1);
+  }
+  input::placeholder, textarea::placeholder { color: var(--ink3); }
+  select option { background: var(--bg2); }
+  textarea { resize: vertical; min-height: 100px; }
+  .field-hint { font-size: 0.73rem; color: var(--ink3); margin-top: 6px; }
+
+  .form-actions { margin-top: 32px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border: none; border-radius: 14px; padding: 14px 36px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: #fff;
+    cursor: pointer; transition: all var(--transition);
+    box-shadow: 0 6px 24px rgba(200,151,58,0.35);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px); box-shadow: 0 10px 32px rgba(200,151,58,0.5);
+  }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-reset {
+    background: none; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 24px;
+    font-size: 0.9rem; color: var(--ink2); cursor: pointer; transition: all var(--transition);
+  }
+  .btn-reset:hover { border-color: var(--ink2); color: var(--ink); }
+  .spinner {
+    width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .alert {
+    border-radius: 12px; padding: 14px 18px; font-size: 0.9rem;
+    margin-top: 20px; display: none; align-items: flex-start; gap: 12px;
+  }
+  .alert.show { display: flex; }
+  .alert.success { background: rgba(39,174,96,0.08); border: 1px solid rgba(39,174,96,0.25); color: #27ae60; }
+  .alert.error { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.25); color: #e74c3c; }
+  .alert-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+  /* ── Categories visual ── */
+  .categories {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 48px 0 0;
+  }
+  .cat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px 14px; text-align: center; transition: all var(--transition);
+  }
+  .cat-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .cat-icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .cat-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.82rem; }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding: 32px 40px; display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px; font-size: 0.82rem; color: var(--ink2);
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    header { padding: 14px 20px; }
+    .page-hero { padding: 36px 20px; }
+    .form-container { padding: 0 16px 48px; margin-top: 32px; }
+    .form-card { padding: 28px 20px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+    .categories { grid-template-columns: 1fr 1fr; }
+    footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+     <div style="display:flex; align-items:center; gap:10px;">
+
+                <img src="srlogo.png" alt="SR Job Center Logo"
+                    style="width:50px; height:50px; object-fit:cover; border-radius:50%;">
+
+                <span style="font-size:24px; font-weight:bold; color:#000;">
+                    SR <span style="color:#007bff;">Job Center</span>
+                </span>
+
+            </div>
+  </a>
+  <div class="header-right">
+    <a href="userhome.html" class="btn-sm">🔍 Find Jobs</a>
+    <a href="index.html" class="btn-sm">← Home</a>
+    <button class="theme-btn" id="themeToggle">🌙</button>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="hero-badge">🏢 For Employers</div>
+  <h1>Find the <em>Right Staff</em><br/>for Your Business</h1>
+  <p class="hero-sub">Submit your staffing requirements and our team will connect you with pre-screened, qualified candidates.</p>
+  <div class="categories">
+    <div class="cat-card"><div class="cat-icon">🏨</div><div class="cat-name">Hospitality</div></div>
+    <div class="cat-card"><div class="cat-icon">📈</div><div class="cat-name">Sales / Marketing</div></div>
+    <div class="cat-card"><div class="cat-icon">💼</div><div class="cat-name">Professional</div></div>
+    <div class="cat-card"><div class="cat-icon">🛡️</div><div class="cat-name">Security</div></div>
+  </div>
+</div>
+
+<div class="form-container">
+  <div class="form-card">
+    <div class="form-section-title">🏢 Company Information</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="required">Company Name</label>
+        <input type="text" id="company_name" placeholder="Your company name"/>
+      </div>
+      <div class="form-group">
+        <label class="required">Category</label>
+        <select id="category">
+          <option value="">Select Category</option>
+          <option>Hospitality</option>
+          <option>Sales/Marketing</option>
+          <option>Professional</option>
+          <option>Security</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="required">Address</label>
+        <input type="text" id="address" placeholder="Office address"/>
+      </div>
+      <div class="form-group">
+        <label>Google Maps Link</label>
+        <input type="url" id="location_link" placeholder="https://maps.app.goo.gl/…"/>
+        <span class="field-hint">Share your location link from Google Maps</span>
+      </div>
+    </div>
+
+    <div class="form-section-title">👥 Staff Requirements</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="required">Number of Staff Needed</label>
+        <input type="number" id="staff_need" placeholder="e.g. 5" min="1"/>
+      </div>
+      <div class="form-group">
+        <label class="required">Position</label>
+        <input type="text" id="position" placeholder="e.g. Front Desk Officer"/>
+      </div>
+      <div class="form-group">
+        <label>Working Hours</label>
+        <input type="text" id="working_hrs" placeholder="e.g. 9:00 AM – 5:00 PM"/>
+      </div>
+      <div class="form-group">
+        <label>Qualification Required</label>
+        <input type="text" id="qualifaction_need" placeholder="e.g. +2 Pass, Bachelor"/>
+      </div>
+      <div class="form-group">
+        <label>Shift</label>
+        <input type="text" id="shift" placeholder="e.g. Day / Night / Rotating"/>
+      </div>
+      <div class="form-group">
+        <label>Salary Range</label>
+        <input type="text" id="salary_range" placeholder="e.g. 12,000 – 18,000 NPR"/>
+      </div>
+      <div class="form-group">
+        <label>Gender Preference</label>
+        <input type="text" id="gender" placeholder="Male / Female / Any"/>
+      </div>
+    </div>
+
+    <div class="form-section-title">📝 Job Description</div>
+    <div class="form-group">
+      <label>Describe the Role</label>
+      <textarea id="job_discription" placeholder="Describe responsibilities, requirements, benefits, and any other relevant information…" rows="5"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-submit" id="submitBtn" onclick="submitRequest()">
+        <span id="submitBtnText">🚀 Submit Request</span>
+      </button>
+      <button class="btn-reset" onclick="resetForm()">Reset Form</button>
+    </div>
+
+    <div class="alert" id="formAlert">
+      <span class="alert-icon" id="alertIcon">✅</span>
+      <div>
+        <div id="alertMsg">Staff request submitted successfully!</div>
+        <div id="alertSub" style="font-size:0.8rem; opacity:0.8; margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact note -->
+  <div style="margin-top: 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+    <div style="font-size: 1.8rem;">📞</div>
+    <div>
+      <div style="font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 4px;">Prefer to talk directly?</div>
+      <div style="font-size: 0.875rem; color: var(--ink2)">Call us at <a href="tel:+9779706886200" style="color:var(--gold); text-decoration:none; font-weight:600">+977 9706886200</a> or email <a href="mailto:srjobcentersupport@gmail.com" style="color:var(--gold); text-decoration:none; font-weight:600">srjobcentersupport@gmail.com</a></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 SR Job Center · Baneshwor, Kathmandu</span>
+  <span>
+    <a href="mailto:srjobcentersupport@gmail.com">✉️ srjobcentersupport@gmail.com</a> &nbsp;·&nbsp;
+    <a href="tel:+9779706886200">📞 +977 9706886200</a> &nbsp;·&nbsp;
+    <a href="https://maps.app.goo.gl/pcfGBEcxYLsEteHY9" target="_blank">📍 View on Map</a>
+  </span>
+</footer>
+
+<script>
+  const API = "https://script.google.com/macros/s/AKfycbxQ-QXTfypT2y1b5b2OTGNnMYYiOywbzsnZozDxN1LmfW4TyYcaTin-LsvUNKc4GodL/exec";
+
+  // Theme
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  if (savedTheme === 'dark') { root.setAttribute('data-theme','dark'); toggle.textContent = '☀️'; }
+  toggle.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    toggle.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+
+  async function submitRequest() {
+    const d = {
+      company_name:     document.getElementById('company_name').value.trim(),
+      category:         document.getElementById('category').value,
+      address:          document.getElementById('address').value.trim(),
+      location_link:    document.getElementById('location_link').value.trim(),
+      staff_need:       document.getElementById('staff_need').value,
+      position:         document.getElementById('position').value.trim(),
+      working_hrs:      document.getElementById('working_hrs').value.trim(),
+      qualifaction_need: document.getElementById('qualifaction_need').value.trim(),
+      shift:            document.getElementById('shift').value.trim(),
+      salary_range:     document.getElementById('salary_range').value.trim(),
+      gender:           document.getElementById('gender').value.trim(),
+      job_discription:  document.getElementById('job_discription').value.trim(),
+      timestamp:        new Date().toLocaleString()
+    };
+
+    if (!d.company_name || !d.category || !d.address || !d.position) {
+      showAlert('error', '⚠️', 'Please fill in required fields: Company Name, Category, Address, Position.', '');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    const txt = document.getElementById('submitBtnText');
+    btn.disabled = true;
+    txt.innerHTML = '<span class="spinner"></span> Submitting…';
+
+    try {
+      const resp = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'addJobRequest', data: d })
+      });
+      const result = await resp.json();
+      if (result.success) {
+        showAlert('success', '✅', 'Staff request submitted successfully!', 'Our team will review your request and reach out within 24 hours.');
+        resetForm();
+      } else {
+        showAlert('error', '❌', result.message || 'Something went wrong. Please try again.', '');
+      }
+    } catch(e) {
+      showAlert('error', '❌', 'Network error. Please check your connection.', '');
+    } finally {
+      btn.disabled = false;
+      txt.textContent = '🚀 Submit Request';
+    }
+  }
+
+  function showAlert(type, icon, msg, sub) {
+    const el = document.getElementById('formAlert');
+    document.getElementById('alertIcon').textContent = icon;
+    document.getElementById('alertMsg').textContent = msg;
+    document.getElementById('alertSub').textContent = sub;
+    el.className = 'alert show ' + type;
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (type === 'success') setTimeout(() => el.className = 'alert', 8000);
+  }
+
+  function resetForm() {
+    ['company_name','address','location_link','staff_need','position',
+     'working_hrs','qualifaction_need','shift','salary_range','gender','job_discription'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('category').selectedIndex = 0;
+  }
+</script>
+</body>
+</html>
